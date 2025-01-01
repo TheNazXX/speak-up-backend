@@ -9,7 +9,6 @@ import { RepeatWordsModule } from './repeat-words/repeat-words.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WordsEntity } from './words/entities/word.entity';
 import { PartsOfSpeechEntity } from './entities/partOfSpeech.entity';
-import { ItemsModule } from './items/items.module';
 
 @Module({
   imports: [
@@ -23,11 +22,11 @@ import { ItemsModule } from './items/items.module';
       ],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: '12345',
-        database: 'speak-up',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
         synchronize: true,
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: true,
@@ -37,7 +36,6 @@ import { ItemsModule } from './items/items.module';
     WordsModule,
     TextsModule,
     RepeatWordsModule,
-    ItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
