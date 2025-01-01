@@ -13,7 +13,7 @@ async function bootstrap() {
     .addTag('API')
     .build();
 
-  app.enableCors({ origin: ['http://localhost:3001'], credentials: true });
+  app.enableCors({ origin: ['http://localhost:3000'], credentials: true });
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
 

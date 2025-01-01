@@ -1,46 +1,16 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-import { InjectModel } from '@nestjs/mongoose';
-import { Document, Model } from 'mongoose';
-import { RepeatWords } from 'src/schemas/RepeatWords.chema';
-import { Word } from 'src/schemas/Word.schema';
+import { IWord } from 'src/words/types/words.types';
 
 @Injectable()
 export class RepeatWordsService {
-  constructor(
-    @InjectModel(Word.name)
-    private wordModel: Model<Word>,
-    @InjectModel(RepeatWords.name)
-    private repeatWordsModel: Model<RepeatWords>,
-  ) {}
+  constructor() {}
 
-  public async getAll() {
-    return await this.repeatWordsModel.find().populate('wordId').lean();
-  }
+  public async getAll() {}
 
-  public async getRandomWords(count = 5) {
-    const existingRepeatWord = await this.repeatWordsModel.findOne().exec();
+  public async getRandomWords(count = 5) {}
 
-    if (existingRepeatWord) {
-      throw new ConflictException('Words already exists!');
-    }
+  public async postIncorrectWords(incorrectWords: IWord[]) {}
 
-    const randomWords = await this.wordModel.aggregate([
-      { $sample: { size: Number(count) } },
-    ]);
-
-    const repeatWordsDocs = randomWords.map((item: Word & Document) => {
-      return {
-        wordId: item._id,
-      };
-    });
-
-    await this.repeatWordsModel.insertMany(repeatWordsDocs);
-
-    return randomWords;
-  }
-
-  public async deleteAll() {
-    await this.repeatWordsModel.deleteMany({});
-  }
+  public async deleteAll() {}
 }

@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, IsArray, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsString, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateWordDto {
@@ -11,6 +11,14 @@ export class CreateWordDto {
   @IsString({ each: true })
   @ArrayNotEmpty()
   translate: string[];
+
+  @IsString()
+  partOfSpeech: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  sentences: string[];
 }
 
 export class UpdateWordDto extends CreateWordDto {}

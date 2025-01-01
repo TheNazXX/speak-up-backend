@@ -1,21 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  // Patch,
-  // Param,
-  // Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { TextsService } from './texts.service';
 import { UsePipes } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
 import { CreateTextDto } from './dto/create-text.dto';
 import { plainToInstance } from 'class-transformer';
 import { TextDto } from './dto/get-text.dto';
-
-// import { UpdateTextDto } from './dto/update-text.dto';
 
 @Controller('texts')
 export class TextsController {

@@ -1,43 +1,20 @@
-import { Controller, Get, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Delete, Param, Body, Post } from '@nestjs/common';
 import { RepeatWordsService } from './repeat-words.service';
-import { plainToInstance } from 'class-transformer';
-import { WordDto } from 'src/words/dtos/get-words-dto';
+import { IWord } from 'src/words/types/words.types';
 
 @Controller('repeat-words')
 export class RepeatWordsController {
   constructor(private readonly repeatWordsService: RepeatWordsService) {}
 
   @Get('/random/:count')
-  async getRandomWords(@Param('count') count: number = 5) {
-    const data = await this.repeatWordsService.getRandomWords(count);
-
-    return {
-      status: 200,
-      data,
-      message: 'Data was successfully found',
-    };
-  }
+  async getRandomWords(@Param('count') count: number = 5) {}
 
   @Get()
-  async getAllWords() {
-    const data = plainToInstance(
-      WordDto,
-      (await this.repeatWordsService.getAll()).map((item) => {
-        return {
-          ...item.wordId,
-        };
-      }),
-    );
+  async getAllWords() {}
 
-    return {
-      status: 200,
-      data,
-      message: 'Data was successfully found',
-    };
-  }
+  @Post('/incorrect-words')
+  async postIncorrectWords(@Body() words: IWord[]) {}
 
   @Delete('/all')
-  async deleteAll() {
-    return this.repeatWordsService.deleteAll();
-  }
+  async deleteAll() {}
 }

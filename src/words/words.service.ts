@@ -3,79 +3,83 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Word } from 'src/schemas/Word.schema';
+
 import { CreateWordDto, UpdateWordDto } from './dtos/create-word-dto';
+import { Repository } from 'typeorm';
+import { WordsEntity } from './entities/word.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PartsOfSpeechEntity } from 'src/entities/partOfSpeech.entity';
+import { SentenceEntity } from 'src/sentences/sentence.entity';
 
 @Injectable()
 export class WordsService {
-  constructor(@InjectModel(Word.name) private wordModel: Model<Word>) {}
+  constructor(
+    @InjectRepository(WordsEntity)
+    private wordsEntityRepository: Repository<WordsEntity>,
+    @InjectRepository(PartsOfSpeechEntity)
+    private partsOfSpeechEntityRepository: Repository<PartsOfSpeechEntity>,
+    @InjectRepository(SentenceEntity)
+    private sentenceEntityRepository: Repository<SentenceEntity>,
+  ) {}
 
   async create(createWordDto: CreateWordDto) {
-    const wordFromDB = await this.wordModel.findOne({
-      en: createWordDto.en,
+    console.log(createWordDto.sentences, 'sentences');
+
+    const partOfSpeech = await this.partsOfSpeechEntityRepository.findOne({
+      where: { name: createWordDto.partOfSpeech },
     });
 
-    if (wordFromDB) {
-      throw new ConflictException('Word already exists!');
+    const isConsistWord = await this.wordsEntityRepository.findOne({
+      where: { en: createWordDto.en },
+    });
+
+    if (isConsistWord) {
+      throw new ConflictException('Word already consist!');
     }
 
-    const word = await this.wordModel.create({
+    if (!partOfSpeech) {
+      throw new NotFoundException('Unknown part of speech!');
+    }
+
+    let sentences = [];
+
+    if (!!createWordDto.sentences.length) {
+      sentences = await Promise.all(
+        createWordDto.sentences.map(async (text) => {
+          let sentence = await this.sentenceEntityRepository.findOne({
+            where: { text },
+          });
+          if (!sentence) {
+            sentence = this.sentenceEntityRepository.create({ text });
+            sentence = await this.sentenceEntityRepository.save(sentence);
+          }
+          return sentence;
+        }),
+      );
+    }
+
+    const word = await this.wordsEntityRepository.create({
       ...createWordDto,
-      createAt: new Date(),
-      updateAt: new Date(),
+      sentences,
+      partOfSpeech: partOfSpeech,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
-    return word.toObject();
+    return await this.wordsEntityRepository.save(word);
   }
 
-  async update(wordId: string, updateWordDto: UpdateWordDto): Promise<Word> {
-    try {
-      const word = await this.wordModel
-        .findByIdAndUpdate(
-          wordId,
-          {
-            ...updateWordDto,
-            updateAt: new Date(),
-          },
-          { new: true, runValidators: true },
-        )
-        .lean();
+  async update(wordId: string, updateWordDto: UpdateWordDto) {}
 
-      if (!word) {
-        throw new NotFoundException(`Word with id ${wordId} not found`);
-      }
-
-      return word;
-    } catch (error) {
-      if (error.code === 11000) {
-        throw new ConflictException(
-          'A word with this "en" field already exists',
-        );
-      }
-      throw error;
-    }
-  }
   async get(en: string) {
-    const data = await this.wordModel
-      .findOne({
-        en,
-      })
-      .lean();
-
-    if (!data) {
-      throw new NotFoundException('Word not found');
-    }
-
-    return data;
+    return await this.wordsEntityRepository.findOne({ where: { en } });
   }
 
   async getAll() {
-    return await this.wordModel.find().lean();
+    return await this.wordsEntityRepository.find({});
   }
 
   async deleteByEn(en: string) {
-    return await this.wordModel.deleteOne({ en: en });
+    return await this.wordsEntityRepository.delete({ en });
   }
 }
