@@ -26,6 +26,7 @@ export class WordsEntity extends BaseDate {
   @JoinColumn({ name: 'part_of_speech' })
   partOfSpeech: PartsOfSpeechEntity;
 
-  @ManyToMany(() => SentenceEntity, (sentences) => sentences.id)
+  @ManyToMany(() => SentenceEntity, { cascade: true })
+  @JoinTable()
   sentences: SentenceEntity[];
 }

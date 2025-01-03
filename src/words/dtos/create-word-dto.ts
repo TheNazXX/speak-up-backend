@@ -1,5 +1,6 @@
 import { ArrayNotEmpty, IsArray, IsString, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { CreateSentenceDto } from './create-sentence-dto';
 
 export class CreateWordDto {
   @ApiProperty({ description: 'word' })

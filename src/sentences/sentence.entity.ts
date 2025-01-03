@@ -1,3 +1,4 @@
+import { AbstractEntity } from 'src/database/abstract.enitity';
 import { BaseDate } from 'src/entities/root';
 import { WordsEntity } from 'src/words/entities/word.entity';
 import {
@@ -9,18 +10,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'sentence' })
-export class SentenceEntity extends BaseDate {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class SentenceEntity extends AbstractEntity<SentenceEntity> {
   @Column()
   text: string;
-
-  @ManyToMany(() => WordsEntity, (word) => word.sentences)
-  @JoinTable({
-    name: 'sentence_words',
-    joinColumn: { name: 'sentence_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'word_id', referencedColumnName: 'id' },
-  })
-  words: WordsEntity[];
 }

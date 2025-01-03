@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { CreateWordDto, UpdateWordDto } from './dtos/create-word-dto';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { WordsEntity } from './entities/word.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PartsOfSpeechEntity } from 'src/entities/partOfSpeech.entity';
@@ -20,11 +20,10 @@ export class WordsService {
     private partsOfSpeechEntityRepository: Repository<PartsOfSpeechEntity>,
     @InjectRepository(SentenceEntity)
     private sentenceEntityRepository: Repository<SentenceEntity>,
+    private readonly enitiyManager: EntityManager,
   ) {}
 
   async create(createWordDto: CreateWordDto) {
-    console.log(createWordDto.sentences, 'sentences');
-
     const partOfSpeech = await this.partsOfSpeechEntityRepository.findOne({
       where: { name: createWordDto.partOfSpeech },
     });
@@ -41,38 +40,29 @@ export class WordsService {
       throw new NotFoundException('Unknown part of speech!');
     }
 
-    let sentences = [];
-
-    if (!!createWordDto.sentences.length) {
-      sentences = await Promise.all(
-        createWordDto.sentences.map(async (text) => {
-          let sentence = await this.sentenceEntityRepository.findOne({
-            where: { text },
-          });
-          if (!sentence) {
-            sentence = this.sentenceEntityRepository.create({ text });
-            sentence = await this.sentenceEntityRepository.save(sentence);
-          }
-          return sentence;
-        }),
-      );
-    }
+    const sentences = createWordDto.sentences.map(
+      (createSentenceDto) => new SentenceEntity({ text: createSentenceDto }),
+    );
 
     const word = await this.wordsEntityRepository.create({
       ...createWordDto,
+      en: createWordDto.en.trim(),
       sentences,
       partOfSpeech: partOfSpeech,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    return await this.wordsEntityRepository.save(word);
+    return await this.enitiyManager.save(word);
   }
 
   async update(wordId: string, updateWordDto: UpdateWordDto) {}
 
   async get(en: string) {
-    return await this.wordsEntityRepository.findOne({ where: { en } });
+    return await this.wordsEntityRepository.findOne({
+      where: { en },
+      relations: { sentences: true, partOfSpeech: true },
+    });
   }
 
   async getAll() {
