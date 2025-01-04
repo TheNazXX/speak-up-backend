@@ -1,6 +1,6 @@
 import { PartsOfSpeechEntity } from 'src/entities/partOfSpeech.entity';
 import { BaseDate } from 'src/entities/root';
-import { SentenceEntity } from 'src/sentences/sentence.entity';
+import { SentenceEntity } from 'src/sentences/entities/sentence.entity';
 import {
   Column,
   Entity,

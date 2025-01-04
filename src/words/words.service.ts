@@ -9,7 +9,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { WordsEntity } from './entities/word.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PartsOfSpeechEntity } from 'src/entities/partOfSpeech.entity';
-import { SentenceEntity } from 'src/sentences/sentence.entity';
+import { SentenceEntity } from 'src/sentences/entities/sentence.entity';
 
 @Injectable()
 export class WordsService {
@@ -56,11 +56,26 @@ export class WordsService {
     return await this.enitiyManager.save(word);
   }
 
-  async update(wordId: string, updateWordDto: UpdateWordDto) {}
+  async update(wordName: string, updateWordDto: UpdateWordDto) {
+    const wordData = await this.wordsEntityRepository.findOneBy({
+      en: wordName,
+    });
+
+    if (updateWordDto.en) {
+      wordData.en = updateWordDto.en;
+    }
+
+    if (updateWordDto.translate) {
+      wordData.translate = updateWordDto.translate;
+    }
+
+    return await this.enitiyManager.save(wordData);
+  }
 
   async get(en: string) {
     return await this.wordsEntityRepository.findOne({
       where: { en },
+
       relations: { sentences: true, partOfSpeech: true },
     });
   }

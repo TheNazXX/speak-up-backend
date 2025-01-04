@@ -4,7 +4,7 @@ import { WordsController } from './words.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WordsEntity } from './entities/word.entity';
 import { PartsOfSpeechEntity } from 'src/entities/partOfSpeech.entity';
-import { SentenceEntity } from 'src/sentences/sentence.entity';
+import { SentenceEntity } from 'src/sentences/entities/sentence.entity';
 
 @Module({
   imports: [

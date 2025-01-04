@@ -9,6 +9,7 @@ import { RepeatWordsModule } from './repeat-words/repeat-words.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WordsEntity } from './words/entities/word.entity';
 import { PartsOfSpeechEntity } from './entities/partOfSpeech.entity';
+import { SentencesModule } from './sentences/entities/sentences.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PartsOfSpeechEntity } from './entities/partOfSpeech.entity';
       }),
       inject: [ConfigService],
     }),
+    SentencesModule,
     WordsModule,
     TextsModule,
     RepeatWordsModule,

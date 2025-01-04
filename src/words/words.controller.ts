@@ -8,6 +8,7 @@ import {
   Param,
   Put,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { WordsService } from './words.service';
 import { CreateWordDto, UpdateWordDto } from './dtos/create-word-dto';
@@ -39,7 +40,7 @@ export class WordsController {
     };
   }
 
-  @Put('/:id')
+  @Patch('/:en')
   @ApiOperation({ summary: 'Update word' })
   @ApiResponse({ status: 20, description: 'Word successfully updated' })
   @ApiResponse({ status: 400, description: 'Bad request' })
@@ -47,11 +48,11 @@ export class WordsController {
   @UsePipes(new ValidationPipe())
   async updateWord(
     @Body() updateWordDto: UpdateWordDto,
-    @Param('id') wordId: string,
+    @Param('en') wordName: string,
   ) {
     const data = plainToInstance(
       WordDto,
-      await this.wordsService.update(wordId, updateWordDto),
+      await this.wordsService.update(wordName, updateWordDto),
     );
 
     return {
