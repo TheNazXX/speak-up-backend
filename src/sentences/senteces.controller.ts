@@ -17,9 +17,14 @@ import { UpdateSentenceDto } from './dtos/update-sentence-dto';
 export class SentencesController {
   constructor(private sentenceService: SentencesService) {}
 
-  @Get()
-  async getByWord(@Query('word') word: string) {
+  @Get('/word')
+  async getByWord(@Query('en') word: string) {
     return await this.sentenceService.getByWord(word);
+  }
+
+  @Get('/phrase')
+  async getByPhrase(@Query('en') phrase: string) {
+    return await this.sentenceService.getByPhrase(phrase);
   }
 
   @Get()

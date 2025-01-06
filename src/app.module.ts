@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WordsEntity } from './words/entities/word.entity';
 import { PartsOfSpeechEntity } from './entities/partOfSpeech.entity';
 import { SentencesModule } from './sentences/entities/sentences.module';
+import { PhrasesModule } from './phrases/phrases.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { SentencesModule } from './sentences/entities/sentences.module';
     WordsModule,
     TextsModule,
     RepeatWordsModule,
+    PhrasesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
