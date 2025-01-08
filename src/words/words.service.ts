@@ -87,4 +87,22 @@ export class WordsService {
   async deleteByEn(en: string) {
     return await this.wordsEntityRepository.delete({ en });
   }
+
+  async addSentence(en: string, sentence: string) {
+    const wordData = await this.wordsEntityRepository.findOne({
+      where: { en },
+      relations: { sentences: true },
+    });
+
+    if (!wordData) {
+      throw new NotFoundException('No such word!');
+    }
+
+    wordData.sentences = [
+      ...(wordData?.sentences || []),
+      new SentenceEntity({ text: sentence }),
+    ];
+
+    return await this.enitiyManager.save(wordData);
+  }
 }

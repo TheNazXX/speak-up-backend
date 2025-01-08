@@ -8,6 +8,7 @@ import {
   ValidationPipe,
   UsePipes,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { SentenceEntity } from './entities/sentence.entity';
 import { SentencesService } from './sentences.service';
@@ -39,5 +40,10 @@ export class SentencesController {
     @Body() updateSentenceDto: UpdateSentenceDto,
   ) {
     return await this.sentenceService.update(id, updateSentenceDto.text);
+  }
+
+  @Delete('/:id')
+  async delete(@Param('id') id: string) {
+    return await this.sentenceService.delete(id);
   }
 }

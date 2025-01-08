@@ -73,4 +73,18 @@ export class SentencesService {
 
     return this.enitiyManager.save(senteceData);
   }
+
+  async delete(id: string) {
+    const sentence = await this.sentenceEntityRepository.findOneBy({ id });
+
+    if (!sentence) {
+      throw new NotFoundException(`Sentence not found.`);
+    }
+
+    const deletedSentece = { ...sentence };
+
+    await this.sentenceEntityRepository.remove(sentence);
+
+    return deletedSentece;
+  }
 }

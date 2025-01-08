@@ -86,6 +86,18 @@ export class WordsController {
     };
   }
 
+  @Post('/:en/sentence')
+  @UsePipes(new ValidationPipe())
+  async addSentenceToWord(
+    @Param('en') en: string,
+    @Body() createWordSentenceDto: { sentence: string },
+  ) {
+    return await this.wordsService.addSentence(
+      en,
+      createWordSentenceDto.sentence,
+    );
+  }
+
   @Delete('/:en')
   async deleteWord(@Param('en') en: string) {
     const data = plainToInstance(
