@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePhraseDto } from './dto/create-phrase.dto';
 import { UpdatePhraseDto } from './dto/update-phrase.dto';
 import { PhrasesEntity } from './entities/phrase.entity';
@@ -45,11 +45,29 @@ export class PhrasesService {
     });
   }
 
-  update(id: number, updatePhraseDto: UpdatePhraseDto) {
+  async addSentence(en: string, sentence: string) {
+    const phraseData = await this.phraseEntityRepository.findOne({
+      where: { en },
+      relations: { sentences: true },
+    });
+
+    if (!phraseData) {
+      throw new NotFoundException('Not found phrase');
+    }
+
+    phraseData.sentences = [
+      ...(phraseData?.sentences || []),
+      new SentenceEntity({ text: sentence }),
+    ];
+
+    return await this.entityManager.save(phraseData);
+  }
+
+  async update(id: number, updatePhraseDto: UpdatePhraseDto) {
     return `This action updates a #${id} phrase`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} phrase`;
   }
 }

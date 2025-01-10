@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PhrasesService } from './phrases.service';
 import { CreatePhraseDto } from './dto/create-phrase.dto';
@@ -47,5 +49,17 @@ export class PhrasesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.phrasesService.remove(+id);
+  }
+
+  @Post('/:en/sentence')
+  @UsePipes(new ValidationPipe())
+  async addSentence(
+    @Param('en') en: string,
+    @Body() createSentenceDto: { sentence: string },
+  ) {
+    return await this.phrasesService.addSentence(
+      en,
+      createSentenceDto.sentence,
+    );
   }
 }
