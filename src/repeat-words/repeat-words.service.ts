@@ -1,16 +1,37 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { LessThan, MoreThanOrEqual } from 'typeorm';
+import { WordsEntity } from 'src/words/entities/word.entity';
 
 import { IWord } from 'src/words/types/words.types';
+import { EntityManager, Repository } from 'typeorm';
+import { RepeatWordsEntity } from './entities/repeat-word.entity';
+import { GlobalSettingsService } from 'src/global-settings/global-settings.service';
 
 @Injectable()
 export class RepeatWordsService {
-  constructor() {}
+  constructor(
+    @InjectRepository(WordsEntity)
+    private readonly wordsEntityRepository: Repository<WordsEntity>,
 
-  public async getAll() {}
+    @InjectRepository(RepeatWordsEntity)
+    private readonly repeatWordsEntity: Repository<RepeatWordsEntity>,
 
-  public async getRandomWords(count = 5) {}
+    private readonly globalSettingsService: GlobalSettingsService,
 
-  public async postIncorrectWords(incorrectWords: IWord[]) {}
+    private readonly entityManager: EntityManager,
+  ) {}
 
-  public async deleteAll() {}
+  async isRepeatingToday() {
+    const { lastRepeatingWordsDate } =
+      await this.globalSettingsService.getLastRepeatingWordsDate();
+
+    let lastDay = new Date(lastRepeatingWordsDate);
+    let today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+    lastDay.setHours(0, 0, 0, 0);
+
+    return lastDay.getTime() === today.getTime();
+  }
 }

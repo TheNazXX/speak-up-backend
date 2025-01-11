@@ -105,4 +105,27 @@ export class WordsService {
 
     return await this.enitiyManager.save(wordData);
   }
+
+  async getLastAddedWords() {
+    let data = [];
+    let i = 1;
+
+    while (!!!data.length) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - i);
+
+      data = await this.wordsEntityRepository
+        .createQueryBuilder('word')
+        .where('word.createdAt >= :yesterday', { yesterday })
+        .andWhere('word.createdAt < :today', { today })
+        .getMany();
+
+      i++;
+    }
+
+    return data;
+  }
 }
