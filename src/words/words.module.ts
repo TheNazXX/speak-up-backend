@@ -16,5 +16,6 @@ import { SentenceEntity } from 'src/sentences/entities/sentence.entity';
   ],
   providers: [WordsService],
   controllers: [WordsController],
+  exports: [WordsService],
 })
 export class WordsModule {}

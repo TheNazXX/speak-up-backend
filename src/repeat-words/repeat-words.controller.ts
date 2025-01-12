@@ -12,7 +12,27 @@ export class RepeatWordsController {
 
   @Get('/daily')
   async getAll() {
-    return this.repeatWordsService.isRepeatingToday();
+    const isRepeatingToday = await this.repeatWordsService.isRepeatingToday();
+
+    if (isRepeatingToday) {
+      return {
+        data: [],
+        message: 'You repeated words todayy',
+      };
+    }
+
+    let repeatWords = await this.repeatWordsService.getAll();
+
+    if (!!repeatWords.length) {
+      return {
+        data: repeatWords,
+        message: 'Firsly you need repeat currently words',
+      };
+    }
+
+    repeatWords = await this.repeatWordsService.createDailySession();
+
+    return repeatWords;
   }
 
   @Get('/random/:count')
