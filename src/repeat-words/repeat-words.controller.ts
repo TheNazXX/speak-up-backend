@@ -1,4 +1,13 @@
-import { Controller, Get, Delete, Param, Body, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Delete,
+  Param,
+  Body,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { RepeatWordsService } from './repeat-words.service';
 import { IWord } from 'src/words/types/words.types';
 import { GlobalSettingsService } from 'src/global-settings/global-settings.service';
@@ -33,6 +42,14 @@ export class RepeatWordsController {
     repeatWords = await this.repeatWordsService.createDailySession();
 
     return repeatWords;
+  }
+
+  @Post('/correct')
+  @UsePipes(new ValidationPipe())
+  async updateCorrectWords(@Body() updateCorrectWordsDto: { idx: string[] }) {
+    return this.repeatWordsService.updateCorrectWords(
+      updateCorrectWordsDto.idx,
+    );
   }
 
   @Get('/random/:count')

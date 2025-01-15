@@ -47,6 +47,16 @@ export class RepeatWordsService {
     return repeatWords;
   }
 
+  async updateCorrectWords(idx: string[]) {
+    for (const id of idx) {
+      await this.repeatWordsEntity.delete({ id });
+    }
+
+    return await this.repeatWordsEntity.find({
+      relations: { word: true },
+    });
+  }
+
   async isRepeatingToday() {
     const { lastRepeatingWordsDate } =
       await this.globalSettingsService.getLastRepeatingWordsDate();

@@ -81,7 +81,11 @@ export class WordsService {
   }
 
   async getAll() {
-    return await this.wordsEntityRepository.find({});
+    return await this.wordsEntityRepository.find({
+      order: {
+        createdAt: 'ASC',
+      },
+    });
   }
 
   async deleteByEn(en: string) {

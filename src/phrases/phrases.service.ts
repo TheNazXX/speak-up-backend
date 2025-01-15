@@ -28,6 +28,7 @@ export class PhrasesService {
 
     const phraseData = await this.phraseEntityRepository.create({
       ...createPhraseDto,
+      en: createPhraseDto.en.trim(),
       sentences,
     });
 
