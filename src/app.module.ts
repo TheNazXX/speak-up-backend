@@ -12,6 +12,7 @@ import { PartsOfSpeechEntity } from './entities/partOfSpeech.entity';
 import { SentencesModule } from './sentences/entities/sentences.module';
 import { PhrasesModule } from './phrases/phrases.module';
 import { GlobalSettingsModule } from './global-settings/global-settings.module';
+import { RepeatPhrasesModule } from './repeat-phrases/repeat-phrases.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { GlobalSettingsModule } from './global-settings/global-settings.module';
     RepeatWordsModule,
     PhrasesModule,
     GlobalSettingsModule,
+    RepeatPhrasesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

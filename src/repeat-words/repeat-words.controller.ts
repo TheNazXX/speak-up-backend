@@ -21,15 +21,6 @@ export class RepeatWordsController {
 
   @Get('/daily')
   async getAll() {
-    const isRepeatingToday = await this.repeatWordsService.isRepeatingToday();
-
-    if (isRepeatingToday) {
-      return {
-        data: [],
-        message: 'You repeated words todayy',
-      };
-    }
-
     let repeatWords = await this.repeatWordsService.getAll();
 
     if (!!repeatWords.length) {
@@ -39,7 +30,18 @@ export class RepeatWordsController {
       };
     }
 
+    const isRepeatingToday = await this.repeatWordsService.isRepeatingToday();
+
+    if (isRepeatingToday) {
+      return {
+        data: [],
+        message: 'You repeated words today',
+      };
+    }
+
     repeatWords = await this.repeatWordsService.createDailySession();
+
+    await this.globalSettingsService.updateRepeatWordsDate();
 
     return repeatWords;
   }

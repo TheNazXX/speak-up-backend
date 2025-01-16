@@ -16,9 +16,16 @@ export class GlobalSettingsService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  async updateRepeatWordsData() {
-    // const global_settings = await this.globalSettingsEntityRepository.find({});
-    // return global_settings;
+  async updateRepeatWordsDate() {
+    const global_settings = await this.globalSettingsEntityRepository.findOne({
+      where: { id: this.GLOBAL_SETTINGS_ID },
+    });
+
+    global_settings.lastRepeatingWordsDate = new Date();
+
+    await this.entityManager.save(global_settings);
+
+    return global_settings;
   }
 
   async getLastRepeatingWordsDate() {
