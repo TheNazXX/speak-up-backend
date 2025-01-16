@@ -28,10 +28,29 @@ export class GlobalSettingsService {
     return global_settings;
   }
 
+  async updateRepeatPhrasesDate() {
+    const global_settings = await this.globalSettingsEntityRepository.findOne({
+      where: { id: this.GLOBAL_SETTINGS_ID },
+    });
+
+    global_settings.lastRepeatingPhrasesDate = new Date();
+
+    await this.entityManager.save(global_settings);
+
+    return global_settings;
+  }
+
   async getLastRepeatingWordsDate() {
     return await this.globalSettingsEntityRepository.findOne({
       where: { id: this.GLOBAL_SETTINGS_ID },
       select: { lastRepeatingWordsDate: true },
+    });
+  }
+
+  async getLastRepeatingPhraseDate() {
+    return await this.globalSettingsEntityRepository.findOne({
+      where: { id: this.GLOBAL_SETTINGS_ID },
+      select: { lastRepeatingPhrasesDate: true },
     });
   }
 

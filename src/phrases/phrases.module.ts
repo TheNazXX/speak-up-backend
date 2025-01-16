@@ -9,5 +9,6 @@ import { SentenceEntity } from 'src/sentences/entities/sentence.entity';
   imports: [TypeOrmModule.forFeature([PhrasesEntity, SentenceEntity])],
   controllers: [PhrasesController],
   providers: [PhrasesService],
+  exports: [PhrasesService],
 })
 export class PhrasesModule {}

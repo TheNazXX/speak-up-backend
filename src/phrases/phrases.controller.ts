@@ -41,16 +41,6 @@ export class PhrasesController {
     };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePhraseDto: UpdatePhraseDto) {
-    return this.phrasesService.update(+id, updatePhraseDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.phrasesService.remove(+id);
-  }
-
   @Post('/:en/sentence')
   @UsePipes(new ValidationPipe())
   async addSentence(

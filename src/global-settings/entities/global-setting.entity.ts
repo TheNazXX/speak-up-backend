@@ -7,4 +7,7 @@ export class GlobalSettingsEntity {
 
   @Column()
   lastRepeatingWordsDate: Date;
+
+  @Column()
+  lastRepeatingPhrasesDate: Date;
 }

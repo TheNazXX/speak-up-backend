@@ -1,34 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RepeatPhrasesService } from './repeat-phrases.service';
 import { CreateRepeatPhraseDto } from './dto/create-repeat-phrase.dto';
 import { UpdateRepeatPhraseDto } from './dto/update-repeat-phrase.dto';
+import { GlobalSettingsService } from 'src/global-settings/global-settings.service';
 
 @Controller('repeat-phrases')
 export class RepeatPhrasesController {
-  constructor(private readonly repeatPhrasesService: RepeatPhrasesService) {}
+  constructor(
+    private readonly repeatPhrasesService: RepeatPhrasesService,
+    private readonly globalSettingsService: GlobalSettingsService,
+  ) {}
 
-  @Post()
-  create(@Body() createRepeatPhraseDto: CreateRepeatPhraseDto) {
-    return this.repeatPhrasesService.create(createRepeatPhraseDto);
-  }
+  @Get('/daily')
+  async getDailyRepeatPhrases() {
+    let repeatPhrases = await this.repeatPhrasesService.getAll();
 
-  @Get()
-  findAll() {
-    return this.repeatPhrasesService.findAll();
-  }
+    if (!!repeatPhrases.length) {
+      return {
+        repeatPhrases,
+        message: 'First repeat this phrases',
+      };
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.repeatPhrasesService.findOne(+id);
-  }
+    const isRepeatingToday = await this.repeatPhrasesService.isRepeatingToday();
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRepeatPhraseDto: UpdateRepeatPhraseDto) {
-    return this.repeatPhrasesService.update(+id, updateRepeatPhraseDto);
-  }
+    if (isRepeatingToday) {
+      return {
+        data: [],
+        message: 'Already repeat today',
+      };
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.repeatPhrasesService.remove(+id);
+    repeatPhrases = await this.repeatPhrasesService.createDailySession();
+
+    await this.globalSettingsService.updateRepeatPhrasesDate();
+
+    return repeatPhrases;
   }
 }

@@ -64,11 +64,26 @@ export class PhrasesService {
     return await this.entityManager.save(phraseData);
   }
 
-  async update(id: number, updatePhraseDto: UpdatePhraseDto) {
-    return `This action updates a #${id} phrase`;
-  }
+  async getLastAddedPhrases() {
+    let data = [];
+    let i = 1;
 
-  async remove(id: number) {
-    return `This action removes a #${id} phrase`;
+    while (!!!data.length) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - i);
+
+      data = await this.phraseEntityRepository
+        .createQueryBuilder('phrase')
+        .where('phrase.createdAt >= :yesterday', { yesterday })
+        .andWhere('phrase.createdAt < :today', { today })
+        .getMany();
+
+      i++;
+    }
+
+    return data;
   }
 }
