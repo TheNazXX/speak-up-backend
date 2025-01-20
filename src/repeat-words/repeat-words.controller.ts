@@ -43,15 +43,29 @@ export class RepeatWordsController {
 
     await this.globalSettingsService.updateRepeatWordsDate();
 
-    return repeatWords;
+    return {
+      data: repeatWords,
+    };
   }
 
   @Post('/correct')
   @UsePipes(new ValidationPipe())
   async updateCorrectWords(@Body() updateCorrectWordsDto: { idx: string[] }) {
-    return this.repeatWordsService.updateCorrectWords(
+    const data = await this.repeatWordsService.updateCorrectWords(
       updateCorrectWordsDto.idx,
     );
+
+    return { data };
+  }
+
+  @Post()
+  @UsePipes(new ValidationPipe())
+  async postRepeatPhrases(@Body() postRepeatWordsDto: { idx: string[] }) {
+    const data = await this.repeatWordsService.addRepeatWords(
+      postRepeatWordsDto.idx,
+    );
+
+    return { message: 'Words was succesfully added' };
   }
 
   @Get('/random/:count')

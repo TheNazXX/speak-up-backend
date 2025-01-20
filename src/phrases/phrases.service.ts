@@ -36,7 +36,11 @@ export class PhrasesService {
   }
 
   async findAll() {
-    return await this.phraseEntityRepository.find({});
+    return await this.phraseEntityRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   async findByEn(en: string) {
@@ -45,6 +49,14 @@ export class PhrasesService {
       relations: { sentences: true },
     });
   }
+
+  async findById(id: string) {
+    return await this.phraseEntityRepository.findOne({
+      where: { id },
+      relations: { sentences: true },
+    });
+  }
+  v;
 
   async addSentence(en: string, sentence: string) {
     const phraseData = await this.phraseEntityRepository.findOne({

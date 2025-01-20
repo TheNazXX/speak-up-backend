@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, MoreThanOrEqual } from 'typeorm';
 import { WordsEntity } from 'src/words/entities/word.entity';
@@ -68,5 +68,23 @@ export class RepeatWordsService {
     lastDay.setHours(0, 0, 0, 0);
 
     return lastDay.getTime() === today.getTime();
+  }
+
+  async addRepeatWords(idx: string[]) {
+    const isRepeatData = await this.getAll();
+
+    if (!!isRepeatData.length) {
+      throw new BadRequestException('Firstly you need repeat current words');
+    }
+
+    for (const id of idx) {
+      const word = await this.wordsService.findById(id);
+      const repeatWord = await this.repeatWordsEntity.create({
+        en: word.en,
+        word: word,
+      });
+
+      await this.entityManager.save(repeatWord);
+    }
   }
 }

@@ -11,6 +11,7 @@ import { RepeatPhrasesService } from './repeat-phrases.service';
 import { CreateRepeatPhraseDto } from './dto/create-repeat-phrase.dto';
 import { UpdateRepeatPhraseDto } from './dto/update-repeat-phrase.dto';
 import { GlobalSettingsService } from 'src/global-settings/global-settings.service';
+import { UsePipes, ValidationPipe } from '@nestjs/common';
 
 @Controller('repeat-phrases')
 export class RepeatPhrasesController {
@@ -25,7 +26,7 @@ export class RepeatPhrasesController {
 
     if (!!repeatPhrases.length) {
       return {
-        repeatPhrases,
+        data: repeatPhrases,
         message: 'First repeat this phrases',
       };
     }
@@ -43,6 +44,29 @@ export class RepeatPhrasesController {
 
     await this.globalSettingsService.updateRepeatPhrasesDate();
 
-    return repeatPhrases;
+    return {
+      data: repeatPhrases,
+      messae: 'Repeat phrases was successfully found',
+    };
+  }
+
+  @Post('/correct')
+  @UsePipes(new ValidationPipe())
+  async updateCorrectWords(@Body() updateCorrectPhrasesDto: { idx: string[] }) {
+    const data = await this.repeatPhrasesService.updateCorrectPhrases(
+      updateCorrectPhrasesDto.idx,
+    );
+
+    return { data };
+  }
+
+  @Post()
+  @UsePipes(new ValidationPipe())
+  async postRepeatPhrases(@Body() postRepeatPhrasesDto: { idx: string[] }) {
+    const data = await this.repeatPhrasesService.addRepeatPhrases(
+      postRepeatPhrasesDto.idx,
+    );
+
+    return { message: 'Phrase was succesfully added' };
   }
 }
