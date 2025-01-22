@@ -41,6 +41,15 @@ export class PhrasesController {
     };
   }
 
+  @Delete(':en')
+  async delete(@Param('en') en: string) {
+    const data = await this.phrasesService.deleteByEn(en);
+    return {
+      message: 'Phrase was successfully deleted',
+      data,
+    };
+  }
+
   @Post('/:en/sentence')
   @UsePipes(new ValidationPipe())
   async addSentence(

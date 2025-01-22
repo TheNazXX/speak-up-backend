@@ -98,4 +98,8 @@ export class PhrasesService {
 
     return data;
   }
+
+  async deleteByEn(en: string) {
+    return await this.phraseEntityRepository.delete({ en });
+  }
 }

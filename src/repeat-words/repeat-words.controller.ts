@@ -60,7 +60,7 @@ export class RepeatWordsController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  async postRepeatPhrases(@Body() postRepeatWordsDto: { idx: string[] }) {
+  async postRepeatWords(@Body() postRepeatWordsDto: { idx: string[] }) {
     const data = await this.repeatWordsService.addRepeatWords(
       postRepeatWordsDto.idx,
     );

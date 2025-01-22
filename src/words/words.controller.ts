@@ -65,7 +65,7 @@ export class WordsController {
   @Get()
   @UsePipes(new ValidationPipe())
   async getWords() {
-    const data = plainToInstance(WordDto, await this.wordsService.getAll());
+    const data = await this.wordsService.getAll();
 
     return {
       status: 200,
