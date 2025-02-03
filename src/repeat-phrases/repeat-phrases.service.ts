@@ -55,14 +55,19 @@ export class RepeatPhrasesService {
   }
 
   async addRepeatPhrases(idx: string[]) {
-    const isRepeatData = await this.getAll();
-
-    if (!!isRepeatData.length) {
-      throw new BadRequestException('Firstly you need repeat current phrases');
-    }
-
     for (const id of idx) {
       const phrase = await this.phrasesService.findById(id);
+
+      const isConsist = await this.repeatPhrasesEntity.find({
+        where: {
+          en: phrase.en,
+        },
+      });
+
+      if (!!isConsist.length) {
+        continue;
+      }
+
       const repeatPhrase = this.repeatPhrasesEntity.create({
         en: phrase.en,
         phrase: phrase,

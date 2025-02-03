@@ -71,14 +71,19 @@ export class RepeatWordsService {
   }
 
   async addRepeatWords(idx: string[]) {
-    const isRepeatData = await this.getAll();
-
-    if (!!isRepeatData.length) {
-      throw new BadRequestException('Firstly you need repeat current words');
-    }
-
     for (const id of idx) {
       const word = await this.wordsService.findById(id);
+
+      const isConsist = await this.repeatWordsEntity.find({
+        where: {
+          en: word.en,
+        },
+      });
+
+      if (!!isConsist.length) {
+        continue;
+      }
+
       const repeatWord = await this.repeatWordsEntity.create({
         en: word.en,
         word: word,
