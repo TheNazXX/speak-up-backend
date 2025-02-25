@@ -29,4 +29,7 @@ export class WordsEntity extends BaseDate {
   @ManyToMany(() => SentenceEntity, { cascade: true })
   @JoinTable()
   sentences: SentenceEntity[];
+
+  @Column({ default: false })
+  isOld: boolean;
 }

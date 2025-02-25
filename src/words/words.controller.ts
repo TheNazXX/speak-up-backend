@@ -9,6 +9,7 @@ import {
   Put,
   Delete,
   Patch,
+  BadRequestException,
 } from '@nestjs/common';
 import { WordsService } from './words.service';
 import { CreateWordDto, UpdateWordDto } from './dtos/create-word-dto';
@@ -110,5 +111,14 @@ export class WordsController {
       data,
       message: 'Word was succesfully deleted',
     };
+  }
+
+  @Post('old')
+  async addOldWords(@Body() dto: { words: string[] }) {
+    if (!!!dto.words.length) {
+      throw new BadRequestException('No words');
+    }
+
+    return await this.wordsService.addOldWords(dto.words);
   }
 }

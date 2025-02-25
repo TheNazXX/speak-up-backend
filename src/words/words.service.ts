@@ -93,6 +93,7 @@ export class WordsService {
       order: {
         createdAt: 'ASC',
       },
+      where: { isOld: false },
     });
   }
 
@@ -139,5 +140,21 @@ export class WordsService {
     }
 
     return data;
+  }
+
+  async addOldWords(words: string[]) {
+    const wordsToUpdate = await this.wordsEntityRepository
+      .createQueryBuilder('word')
+      .where('word.en IN (:...words)', { words })
+      .getMany();
+
+    await this.wordsEntityRepository
+      .createQueryBuilder()
+      .update(WordsEntity)
+      .set({ isOld: true })
+      .where('en IN (:...words)', { words })
+      .execute();
+
+    return wordsToUpdate.map((word) => word.en);
   }
 }
