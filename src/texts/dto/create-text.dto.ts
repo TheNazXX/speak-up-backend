@@ -4,7 +4,13 @@ import { IWord } from 'src/words/types/words.types';
 
 import { Type } from 'class-transformer';
 
-export class TextDto {
+export interface AccordingTextWords {
+  en: string;
+  translate: string[];
+  type: 'word' | 'phrase';
+}
+
+export class CreateTextDto<T> {
   @ApiProperty({ description: 'The name of the text' })
   @IsString()
   name: string;
@@ -12,13 +18,6 @@ export class TextDto {
   @ApiProperty({ description: 'The content of the text' })
   @IsString()
   content: string;
-}
 
-export class CreateTextDto {
-  @ApiProperty({ description: 'Text object containing name and content' })
-  @ValidateNested() // Валидация вложенного объекта
-  @Type(() => TextDto) // Трансформация вложенного объекта
-  data: TextDto;
-
-  words: IWord[];
+  enities: T | null;
 }

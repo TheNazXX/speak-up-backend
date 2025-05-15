@@ -13,6 +13,8 @@ import { SentencesModule } from './sentences/entities/sentences.module';
 import { PhrasesModule } from './phrases/phrases.module';
 import { GlobalSettingsModule } from './global-settings/global-settings.module';
 import { RepeatPhrasesModule } from './repeat-phrases/repeat-phrases.module';
+import { LessonsModule } from './lessons/lessons.module';
+import { TextEnitity } from './texts/entities/text.entity';
 
 @Module({
   imports: [
@@ -44,6 +46,7 @@ import { RepeatPhrasesModule } from './repeat-phrases/repeat-phrases.module';
     PhrasesModule,
     GlobalSettingsModule,
     RepeatPhrasesModule,
+    LessonsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

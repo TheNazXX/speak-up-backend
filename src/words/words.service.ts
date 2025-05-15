@@ -88,6 +88,14 @@ export class WordsService {
     });
   }
 
+  async findByEn(en: string) {
+    return await this.wordsEntityRepository.findOne({
+      where: { en },
+
+      relations: { sentences: true, partOfSpeech: true },
+    });
+  }
+
   async getAll() {
     return await this.wordsEntityRepository.find({
       order: {

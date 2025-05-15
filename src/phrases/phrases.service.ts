@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePhraseDto } from './dto/create-phrase.dto';
 import { UpdatePhraseDto } from './dto/update-phrase.dto';
 import { PhrasesEntity } from './entities/phrase.entity';
@@ -19,6 +24,13 @@ export class PhrasesService {
   ) {}
 
   async create(createPhraseDto: CreatePhraseDto) {
+    const isConsistWord = await this.phraseEntityRepository.findOne({
+      where: { en: createPhraseDto.en },
+    });
+
+    if (isConsistWord) {
+      throw new ConflictException('Phrase already consist!');
+    }
     const sentences = createPhraseDto.sentences.map(
       (item) =>
         new SentenceEntity({

@@ -8,8 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { RepeatPhrasesService } from './repeat-phrases.service';
-import { CreateRepeatPhraseDto } from './dto/create-repeat-phrase.dto';
-import { UpdateRepeatPhraseDto } from './dto/update-repeat-phrase.dto';
 import { GlobalSettingsService } from 'src/global-settings/global-settings.service';
 import { UsePipes, ValidationPipe } from '@nestjs/common';
 
