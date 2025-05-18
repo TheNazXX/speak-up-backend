@@ -5,6 +5,6 @@ export class PartsOfSpeechEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: false, unique: true })
   name: string;
 }

@@ -1,10 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, ValidateNested } from 'class-validator';
-import { IWord } from 'src/words/types/words.types';
+import { IsString } from 'class-validator';
 
-import { Type } from 'class-transformer';
-
-export interface AccordingTextWords {
+export interface TextVocabulary {
   en: string;
   translate: string[];
   type: 'word' | 'phrase';

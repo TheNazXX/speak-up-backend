@@ -7,14 +7,15 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
-  JoinTable,
 } from 'typeorm';
+import { VocabularyType } from '../dto/create-vocabulary.dto';
 
-@Entity({ name: 'words' })
-export class WordsEntity extends BaseDate {
+@Entity({ name: 'vocabulary' })
+export class VocabularyEntity extends BaseDate {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -24,26 +25,29 @@ export class WordsEntity extends BaseDate {
   @Column({ type: 'text', array: true })
   translate: string[];
 
-  @ManyToOne(() => PartsOfSpeechEntity, (part) => part.name)
+  @ManyToOne(() => PartsOfSpeechEntity, (part) => part.name, { nullable: true })
   @JoinColumn({ name: 'part_of_speech' })
   partOfSpeech: PartsOfSpeechEntity;
 
-  @ManyToMany(() => SentenceEntity, { cascade: true })
+  @ManyToMany(() => SentenceEntity, { cascade: true, nullable: true })
   @JoinTable()
   sentences: SentenceEntity[];
 
-  @Column({ default: false })
-  isOld: boolean;
-
-  @ManyToOne(() => LessonEntity, (lesson) => lesson.words, {
+  @ManyToOne(() => LessonEntity, (lesson) => lesson.vocabulary, {
     nullable: true,
-    onDelete: 'SET NULL',
   })
   lesson: LessonEntity | null;
 
-  @ManyToMany(() => TextEnitity, (text) => text.words, {
+  @ManyToMany(() => TextEnitity, (text) => text.name, {
     nullable: true,
     onDelete: 'CASCADE',
   })
+  @JoinTable()
   texts: TextEnitity[];
+
+  @Column({ default: VocabularyType.WORD })
+  type: VocabularyType;
+
+  @Column({ default: false })
+  isOld: boolean;
 }

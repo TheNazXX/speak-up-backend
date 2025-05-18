@@ -19,14 +19,10 @@ export class SentencesController {
   constructor(private sentenceService: SentencesService) {}
 
   @Get('/word')
-  async getByWord(@Query('en') word: string) {
-    return await this.sentenceService.getByWord(word);
-  }
+  async getByWord(@Query('en') word: string) {}
 
   @Get('/phrase')
-  async getByPhrase(@Query('en') phrase: string) {
-    return await this.sentenceService.getByPhrase(phrase);
-  }
+  async getByPhrase(@Query('en') phrase: string) {}
 
   @Get()
   async getAll() {

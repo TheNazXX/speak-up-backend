@@ -2,19 +2,14 @@ import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { WordsModule } from './words/words.module';
 import { DelayMiddleware } from './middlewares/DelayMiddleware';
 import { TextsModule } from './texts/texts.module';
-import { RepeatWordsModule } from './repeat-words/repeat-words.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WordsEntity } from './words/entities/word.entity';
 import { PartsOfSpeechEntity } from './entities/partOfSpeech.entity';
 import { SentencesModule } from './sentences/entities/sentences.module';
-import { PhrasesModule } from './phrases/phrases.module';
 import { GlobalSettingsModule } from './global-settings/global-settings.module';
-import { RepeatPhrasesModule } from './repeat-phrases/repeat-phrases.module';
 import { LessonsModule } from './lessons/lessons.module';
-import { TextEnitity } from './texts/entities/text.entity';
+import { VocabularyModule } from './vocabulary/vocabulary.module';
 
 @Module({
   imports: [
@@ -22,10 +17,7 @@ import { TextEnitity } from './texts/entities/text.entity';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [
-        ConfigModule,
-        TypeOrmModule.forFeature([WordsEntity, PartsOfSpeechEntity]),
-      ],
+      imports: [ConfigModule, TypeOrmModule.forFeature([PartsOfSpeechEntity])],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
@@ -40,13 +32,10 @@ import { TextEnitity } from './texts/entities/text.entity';
       inject: [ConfigService],
     }),
     SentencesModule,
-    WordsModule,
     TextsModule,
-    RepeatWordsModule,
-    PhrasesModule,
     GlobalSettingsModule,
-    RepeatPhrasesModule,
     LessonsModule,
+    VocabularyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,16 +1,8 @@
 import { AbstractEntity } from 'src/database/abstract.enitity';
-import { PhrasesEntity } from 'src/phrases/entities/phrase.entity';
 import { SentenceEntity } from 'src/sentences/entities/sentence.entity';
-import { WordsEntity } from 'src/words/entities/word.entity';
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
+import { VocabularyEntity } from 'src/vocabulary/entities/vocabulary.entity';
+
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('lesson')
 export class LessonEntity extends AbstractEntity<LessonEntity> {
@@ -28,12 +20,8 @@ export class LessonEntity extends AbstractEntity<LessonEntity> {
   })
   sentences: SentenceEntity[];
 
-  @OneToMany(() => PhrasesEntity, (phrase) => phrase.lesson, { nullable: true })
-  phrases: PhrasesEntity[];
-
-  @OneToMany(() => WordsEntity, (words) => words.lesson, {
+  @OneToMany(() => VocabularyEntity, (vocabulary) => vocabulary.lesson, {
     nullable: true,
-    onDelete: 'CASCADE',
   })
-  words: WordsEntity[];
+  vocabulary: VocabularyEntity[];
 }
