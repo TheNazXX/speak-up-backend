@@ -50,4 +50,7 @@ export class VocabularyEntity extends BaseDate {
 
   @Column({ default: false })
   isOld: boolean;
+
+  @Column({ name: 'repeated_at' })
+  repeatedAt: Date;
 }

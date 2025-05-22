@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { VocabularyService } from './vocabulary.service';
 import { CreateVocabularyDto } from './dto/create-vocabulary.dto';
 import { UpdateVocabularyDto } from './dto/update-vocabulary.dto';
+import { RequestVocabularyType } from './interface';
 
 @Controller('vocabulary')
 export class VocabularyController {
@@ -21,8 +23,8 @@ export class VocabularyController {
   }
 
   @Get()
-  findAll() {
-    return this.vocabularyService.findAll();
+  findAll(@Query('type') type?: RequestVocabularyType) {
+    return this.vocabularyService.getAll(type);
   }
 
   @Get(':id')

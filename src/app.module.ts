@@ -7,7 +7,6 @@ import { TextsModule } from './texts/texts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PartsOfSpeechEntity } from './entities/partOfSpeech.entity';
 import { SentencesModule } from './sentences/entities/sentences.module';
-import { GlobalSettingsModule } from './global-settings/global-settings.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { VocabularyModule } from './vocabulary/vocabulary.module';
 
@@ -33,7 +32,6 @@ import { VocabularyModule } from './vocabulary/vocabulary.module';
     }),
     SentencesModule,
     TextsModule,
-    GlobalSettingsModule,
     LessonsModule,
     VocabularyModule,
   ],
