@@ -13,7 +13,7 @@ export class TextEnitity extends BaseDate {
   id: string;
 
   @Column({ unique: true })
-  name: string;
+  title: string;
 
   @Column()
   content: string;

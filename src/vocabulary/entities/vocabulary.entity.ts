@@ -38,13 +38,6 @@ export class VocabularyEntity extends BaseDate {
   })
   lesson: LessonEntity | null;
 
-  @ManyToMany(() => TextEnitity, (text) => text.name, {
-    nullable: true,
-    onDelete: 'CASCADE',
-  })
-  @JoinTable()
-  texts: TextEnitity[];
-
   @Column({ default: VocabularyType.WORD })
   type: VocabularyType;
 

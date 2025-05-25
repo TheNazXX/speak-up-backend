@@ -1,20 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { BaseDate } from 'src/entities/root';
+import { PrimaryGeneratedColumn } from 'typeorm';
 
-export interface TextVocabulary {
-  en: string;
-  translate: string[];
-  type: 'word' | 'phrase';
-}
+export class CreateTextDto extends BaseDate {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-export class CreateTextDto<T> {
   @ApiProperty({ description: 'The name of the text' })
   @IsString()
-  name: string;
+  title: string;
 
   @ApiProperty({ description: 'The content of the text' })
   @IsString()
   content: string;
-
-  enities: T | null;
 }
