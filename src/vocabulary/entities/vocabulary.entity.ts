@@ -2,7 +2,6 @@ import { PartsOfSpeechEntity } from 'src/entities/partOfSpeech.entity';
 import { BaseDate } from 'src/entities/root';
 import { LessonEntity } from 'src/lessons/entities/lesson.entity';
 import { SentenceEntity } from 'src/sentences/entities/sentence.entity';
-import { TextEnitity } from 'src/texts/entities/text.entity';
 import {
   Column,
   Entity,
@@ -42,7 +41,10 @@ export class VocabularyEntity extends BaseDate {
   type: VocabularyType;
 
   @Column({ default: false })
-  isOld: boolean;
+  isStudied: boolean;
+
+  @Column({ default: false })
+  isDifficult: boolean;
 
   @Column({ name: 'repeated_at' })
   repeatedAt: Date;

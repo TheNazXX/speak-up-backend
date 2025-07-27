@@ -27,6 +27,7 @@ import { VocabularyModule } from './vocabulary/vocabulary.module';
         synchronize: true,
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: true,
+        ssl: { rejectUnauthorized: false }
       }),
       inject: [ConfigService],
     }),
