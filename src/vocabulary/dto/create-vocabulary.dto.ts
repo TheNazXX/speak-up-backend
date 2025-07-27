@@ -6,10 +6,8 @@ export const enum VocabularyType {
 export class CreateVocabularyDto {
   en: string;
   translate: string[];
-  partOfSpeechId: string;
-  sentencesId: string[] | null;
+  partOfSpeech: string | null;
+  sentences: string[] | null;
   lessonId: string | null;
-  textsId: string[] | null;
-  isOld: boolean;
   type: VocabularyType;
 }

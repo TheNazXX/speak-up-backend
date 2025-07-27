@@ -18,26 +18,79 @@ export class VocabularyController {
   constructor(private readonly vocabularyService: VocabularyService) {}
 
   @Post()
-  create(@Body() createVocabularyDto: CreateVocabularyDto) {
-    return this.vocabularyService.create(createVocabularyDto);
+  async create(@Body() createVocabularyDto: CreateVocabularyDto) {
+    const data = await this.vocabularyService.create(createVocabularyDto);
+    return {
+      status: 201,
+      data,
+      message: 'Word successfully created',
+    };
   }
 
   @Get()
-  findAll(@Query('type') type?: RequestVocabularyType) {
-    return this.vocabularyService.getAll(type);
+  findAll(
+    @Query('type') type?: RequestVocabularyType,
+    @Query('createdAt') createdAt?: string,
+    @Query('repeatedAt') repeatedAt?: string,
+  ) {
+    return this.vocabularyService.getAll({ type, createdAt, repeatedAt });
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.vocabularyService.findOne(+id);
+  @Get('/created-dates')
+  async getAllCreatedDates(@Query('type') type?: RequestVocabularyType) {
+    const data = await this.vocabularyService.getAllDatesByType(
+      'createdAt',
+      type,
+    );
+    return {
+      status: 200,
+      data,
+      message: 'Dates successfully found',
+    };
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @Get('/repeated-dates')
+  async getAllRepeatedDates(@Query('type') type?: RequestVocabularyType) {
+    const data = await this.vocabularyService.getAllDatesByType(
+      'repeatedAt',
+      type,
+    );
+    return {
+      status: 200,
+      data,
+      message: 'Dates successfully found',
+    };
+  }
+
+  @Patch('/repeating')
+  async updateRepeating(
+    @Body() vocabularyItems: CreateVocabularyDto[],
+  ) {
+    const data = await this.vocabularyService.updateRepeating(vocabularyItems); 
+    return {
+      status: 200,
+      data,
+      message: 'Vocabulary successfully repeated',
+    };
+  }
+
+  @Get(':en')
+    async findOne(@Param('en') en: string) {
+      return this.vocabularyService.getByEn(en);
+    }
+
+
+  @Patch(':en')
+  async update(
+    @Param('en') en: string,
     @Body() updateVocabularyDto: UpdateVocabularyDto,
   ) {
-    return this.vocabularyService.update(+id, updateVocabularyDto);
+    const data = await this.vocabularyService.update(en, updateVocabularyDto); 
+    return {
+      status: 200,
+      data,
+      message: 'Vocabulary successfully updated',
+    };
   }
 
   @Delete(':id')
