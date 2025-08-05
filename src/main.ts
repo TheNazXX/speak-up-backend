@@ -2,10 +2,19 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+
+  app.enableCors({
+    origin: [
+      'https://speak-up-frontend.vercel.app', 
+      'http://localhost:3000'
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Speak-up API')
@@ -14,10 +23,6 @@ async function bootstrap() {
     .addTag('API')
     .build();
 
-app.use(cors({
-    credentials: true,
-    origin: '*'
-  }))
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
 
