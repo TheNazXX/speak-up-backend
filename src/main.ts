@@ -9,7 +9,7 @@ async function bootstrap() {
 
 
   app.enableCors({
-    origin: '*',           
+    origin: ["https://speak-up-frontend.vercel.app", "http://localhost:3000"],           
     credentials: true,                       
     methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
     allowedHeaders: ['Content-Type','Authorization','Accept'],
