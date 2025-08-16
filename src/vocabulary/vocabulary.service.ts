@@ -180,6 +180,52 @@ export class VocabularyService {
     return updatedItems;
   }
 
+  async getRepeatingQuiz(
+    vocabularyType: RequestVocabularyType,
+    count = 10,
+  ): Promise<VocabularyEntity[]> {
+    const type =
+      vocabularyType === RequestVocabularyType.PHRASES
+        ? VocabularyType.PHRASE
+        : VocabularyType.WORD;
+
+    const take = Math.max(1, count);
+
+
+    const oldest = await this.vocabularyEntityRepository
+      .createQueryBuilder('v')
+      .where('v.type = :type', { type })
+    
+      .orderBy('v.repeatedAt', 'ASC', 'NULLS FIRST')
+      .addOrderBy('v.createdAt', 'DESC')
+      .limit(1)
+      .getOne();
+
+
+    if (!oldest) {
+      return this.vocabularyEntityRepository
+        .createQueryBuilder('v')
+        .where('v.type = :type', { type })
+        .orderBy('RANDOM()')
+        .limit(take)
+        .getMany();
+    }
+
+    if (take === 1) {
+      return [oldest];
+    }
+
+
+    const rest = await this.vocabularyEntityRepository
+      .createQueryBuilder('v')
+      .where('v.type = :type', { type })
+      .andWhere('v.id <> :oldestId', { oldestId: oldest.id })
+      .orderBy('RANDOM()')
+      .limit(take - 1)
+      .getMany();
+    return [oldest, ...rest];
+  }
+
 
   remove(id: number) {
     return `This action removes a #${id} vocabulary`;

@@ -97,4 +97,15 @@ export class VocabularyController {
   remove(@Param('id') id: string) {
     return this.vocabularyService.remove(+id);
   }
+
+  @Get('/repeating/quiz')
+  async getRepeatingQuiz(
+    @Query('type') type?: RequestVocabularyType, count: number = 5){
+    const data = await this.vocabularyService.getRepeatingQuiz(type, count);
+    return {
+      status: 200,
+      data,
+      message: "",
+    }
+  }
 }
